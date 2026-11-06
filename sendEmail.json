@@ -1,0 +1,147 @@
+{
+  "name": "sendEmail",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1328,
+        -224
+      ],
+      "id": "6ffab7a6-aad3-42dd-b5b7-00581bd2e5f7",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "moh.ahmed200528@gmail.com",
+        "subject": "Daily Tasks Reminder",
+        "emailType": "text",
+        "message": "={{ $json.message }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -784,
+        -176
+      ],
+      "id": "77191872-457d-4c22-9283-3a927cda794e",
+      "name": "Send a message",
+      "webhookId": "e2bf7ad2-b0bb-4d59-9f47-63a06fe69b19",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZQILzdFXZmfBo18O",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15WR3U964rDuVowbnBcL3KIJRSALmimBNFwNuhd5vEn0",
+          "mode": "list",
+          "cachedResultName": "task 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15WR3U964rDuVowbnBcL3KIJRSALmimBNFwNuhd5vEn0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15WR3U964rDuVowbnBcL3KIJRSALmimBNFwNuhd5vEn0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1104,
+        -224
+      ],
+      "id": "3d3905ef-5898-4c01-89c0-557d410541c2",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Gw8ccWxwc62FTfxG",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst tasks = $input.all();\n\nconst taskList = tasks\n  .map((item, index) => {\n    return `${index + 1}. ${item.json.task}`;\n  })\n  .join('\\n');\n\nreturn [\n  {\n    json: {\n      message: `Good morning!\n\nHere are your tasks for today:\n\n${taskList}\n\nHave a productive day!`\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1008,
+        -32
+      ],
+      "id": "9f95c097-5a0f-48d7-b993-2508753b170a",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Africa/Cairo",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true
+  },
+  "versionId": "1858d6a1-a461-460f-b134-e1df5e628e2f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fa7612b81ab93758a3c532df6558d17d01e9fb84b1ec541416f1b65fd6eb12af"
+  },
+  "nodeGroups": [],
+  "id": "JYLVM78HoNtzOLml",
+  "tags": []
+}
